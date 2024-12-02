@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <!-- Ensure everything displayed is centered -->
+    <head>
+        <style>
+            h1 {text-align: center;}
+            h2 {text-align: center;}
+            h3 {text-align: center;}
+            p {text-align: center;}
+            div {text-align: center;}
+            form {text-align: center;}
+            img{
+                display: block;
+                margin-right: auto;
+                margin-left: auto;
+            }
+        </style>
+    </head>
+
+<h1>Welcome to the Pb-Sn Phase Diagram!</h1>
+
+<form id="myform" action="/get_plot" method="POST">
+
+<h3> Inputs: Weight % of Sn & Temperature </h3>
+
+<!-- Form fields to get user inputs -->
+Weight_Percent:<input type = "number" name = "wt" placeholder = "wt% Sn" step="any" required/> Temperature:<input type = "number" name = "temp" placeholder = "Temperature (C)" step = "any" required/> <br>
+<br>
+
+<!-- Submit and reset buttons -->
+<input type = "submit" value = "OK" />
+<input type = "button" onclick="reset()" value="Reset"/>  
+<br>
+
+</form>
+
+<!-- Function for reset button -->
+<script>
+function reset(){
+    document.getElementById("myform").reset();
+}
+</script>
+
+<!-- Display all charts that are available -->
+{% if plot_url %}
+<div>
+    <img src = {{plot_url}} alt = "Something went wrong.">
+</div>
+{% endif %}
+
+{% if plot_url1 %}
+<div>
+    <img src = {{plot_url1}} alt = "Something went wrong.">
+</div>
+{% endif %}
+
+{% if plot_url2 %}
+    <h2> Tie Line for Entered Alloy Composition and Temperature</h2>
+    </div>
+        <img src = {{plot_url2}} alt = "Something went wrong.">
+    </div>
+{% endif %}
+
+{% if plot_url2 %}
+
+<!-- Credit for formatting equations -->
+<!-- https://developer.mozilla.org/en-US/docs/Web/MathML/Element/math --> 
+
+<!-- Display implementation of Lever Rule as equations-->
+    <h2>Applying Lever Rule:</h2>
+    <math display="block">
+        <mrow>
+            <mi>{{data[1][4]}}</mi>
+            <mo>=</mo>
+            <mfrac>
+                <mrow>
+                    <mo>{{data[2][5]}}</mo>
+                    <mo>-</mo>
+                    <mo>{{data[2][0]}}</mo>
+                </mrow>
+                <mrow>
+                    <mn>{{data[2][5]}}</mn>
+                    <mn> - </mn>
+                    <mn>{{data[2][3]}}</mn>
+                </mrow>
+            </mfrac>
+
+        </mrow>
+    </math>
+    <br>
+    <br>
+
+    <math display="block">
+        <mrow>
+            <mi>{{data[1][6]}}</mi>
+            <mo>=</mo>
+            <mfrac>
+                <mrow>
+                    <mo>{{data[2][0]}}</mo>
+                    <mo>-</mo>
+                    <mo>{{data[2][3]}}</mo>
+                </mrow>
+                <mrow>
+                    <mn>{{data[2][5]}}</mn>
+                    <mn> - </mn>
+                    <mn>{{data[2][3]}}</mn>
+                </mrow>
+            </mfrac>
+
+        </mrow>
+    </math>
+{% endif %}
+<br>
+
+<!-- Create a table with outputs -->
+{% if data %}
+<h2>Results</h2>
+    <style type="text/css">
+        table,th,td{
+            border: 1px solid black;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <table>
+        <div>
+        <th>Quantity</th>
+        <th>Value</th>
+        {% for line in data[0] %}
+            <tr>
+                <td>{{data[1][line]}}</td>
+                <td>{{data[2][line]}}</td>
+            </tr>
+        {% endfor %}
+        </div>
+    </table>
+{% endif %}
+
+
+<br>
+<br>
+<br>
+</html>
